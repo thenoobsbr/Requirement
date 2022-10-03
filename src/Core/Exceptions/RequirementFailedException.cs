@@ -10,7 +10,7 @@ namespace TRRequirement.Core.Exceptions
         {
         }
 
-        public RequirementFailedException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected RequirementFailedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
