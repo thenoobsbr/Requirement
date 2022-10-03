@@ -1,10 +1,13 @@
-namespace TRRequirement.Core.Tests;
+using Xunit;
 
-public class UnitTest1
+namespace TRRequirement.Core.Tests
 {
-    [Fact]
-    public void Test1()
+    public class UnitTest1
     {
+        [Fact]
+        public void Test1()
+        {
 
+        }
     }
 }

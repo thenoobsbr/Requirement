@@ -1,8 +1,11 @@
-namespace TRRequirement.Core.Exceptions;
+using System;
 
-internal class RequirementFailedException : Exception
+namespace TRRequirement.Core.Exceptions
 {
-    public RequirementFailedException(string message) : base(message)
+    internal class RequirementFailedException : Exception
     {
+        public RequirementFailedException(string message) : base(message)
+        {
+        }
     }
 }

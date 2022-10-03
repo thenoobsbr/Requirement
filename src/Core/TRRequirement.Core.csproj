@@ -1,9 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+      <TargetFramework>netstandard2.1</TargetFramework>
+      <Nullable>enable</Nullable>
+      <Authors>Tiago de Carvalho Resende</Authors>
+      <Description>Library to test requirements.</Description>
+      <PackageProjectUrl>https://github.com/tiagor87/tr-requirement</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/tiagor87/tr-requirement</RepositoryUrl>
+      <PackageTags>parser, netcore, dotnet, simple, abstraction</PackageTags>
+      <ProjectGuid>{ED8F9D65-A353-4617-BDDB-29D4745E81FB}</ProjectGuid>
   </PropertyGroup>
 
 </Project>
