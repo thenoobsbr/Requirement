@@ -108,4 +108,104 @@ public static class Requirement
 
         throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should not match the pattern {pattern}");
     }
+    
+    public static void ToBeGreaterThanOrEqualTo(int value, int compareValue, Func<Exception>? createException)
+    {
+        if (value >= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be greater than or equal to {compareValue}");
+    }
+    
+    public static void ToBeGreaterThanOrEqualTo(long value, long compareValue, Func<Exception>? createException)
+    {
+        if (value >= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be greater than or equal to {compareValue}");
+    }
+    
+    public static void ToBeGreaterThanOrEqualTo(decimal value, decimal compareValue, Func<Exception>? createException)
+    {
+        if (value >= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be greater than or equal to {compareValue}");
+    }
+    
+    public static void ToBeGreaterThanOrEqualTo(double value, double compareValue, Func<Exception>? createException)
+    {
+        if (value >= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be greater than or equal to {compareValue}");
+    }
+    
+    public static void ToBeGreaterThanOrEqualTo(DateTime value, DateTime compareValue, Func<Exception>? createException)
+    {
+        if (value >= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be greater than or equal to {compareValue}");
+    }
+    
+    public static void ToBeLessThanOrEqualTo(int value, int compareValue, Func<Exception>? createException)
+    {
+        if (value <= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be less than or equal to {compareValue}");
+    }
+    
+    public static void ToBeLessThanOrEqualTo(long value, long compareValue, Func<Exception>? createException)
+    {
+        if (value <= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be less than or equal to {compareValue}");
+    }
+    
+    public static void ToBeLessThanOrEqualTo(decimal value, decimal compareValue, Func<Exception>? createException)
+    {
+        if (value <= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be less than or equal to {compareValue}");
+    }
+    
+    public static void ToBeLessThanOrEqualTo(double value, double compareValue, Func<Exception>? createException)
+    {
+        if (value <= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be less than or equal to {compareValue}");
+    }
+    
+    public static void ToBeLessThanOrEqualTo(DateTime value, DateTime compareValue, Func<Exception>? createException)
+    {
+        if (value <= compareValue)
+        {
+            return;
+        }
+
+        throw createException?.Invoke() ?? new RequirementFailedException($"The \"{value}\" should be less than or equal to {compareValue}");
+    }
 }
