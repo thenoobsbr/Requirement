@@ -1,10 +1,16 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace TRRequirement.Core.Exceptions
 {
-    internal class RequirementFailedException : Exception
+    [Serializable]
+    public class RequirementFailedException : Exception
     {
         public RequirementFailedException(string message) : base(message)
+        {
+        }
+
+        public RequirementFailedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

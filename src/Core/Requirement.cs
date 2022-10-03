@@ -60,16 +60,6 @@ namespace TRRequirement.Core
             throw createException?.Invoke() ?? new RequirementFailedException("The text should be empty");
         }
 
-        public static void ToNotBeEmpty(string text, Func<Exception>? createException = null)
-        {
-            if (!string.IsNullOrWhiteSpace(text))
-            {
-                return;
-            }
-
-            throw createException?.Invoke() ?? new RequirementFailedException("The text should not be empty");
-        }
-
         public static void ToBeEmpty(ICollection collection, Func<Exception>? createException = null)
         {
             if (collection.Count == 0)
@@ -78,6 +68,16 @@ namespace TRRequirement.Core
             }
 
             throw createException?.Invoke() ?? new RequirementFailedException("The collection should be empty");
+        }
+        
+        public static void ToNotBeEmpty(string text, Func<Exception>? createException = null)
+        {
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
+
+            throw createException?.Invoke() ?? new RequirementFailedException("The text should not be empty");
         }
 
         public static void ToNotBeEmpty(ICollection collection, Func<Exception>? createException = null)
