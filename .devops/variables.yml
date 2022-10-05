@@ -1,0 +1,3 @@
+﻿variables:
+  - group: requirement
+  - group: sonar

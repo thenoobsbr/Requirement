@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>true</ImplicitUsings>
+      <Authors>Tiago de Carvalho Resende</Authors>
+      <Description>Library to validate requirements.</Description>
+      <PackageProjectUrl>https://github.com/thenoobsbr/requirement</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/thenoobsbr/requirement</RepositoryUrl>
+      <PackageTags>parser, netcore, dotnet, simple, abstraction</PackageTags>
+      <ProjectGuid>{ED8F9D65-A353-4617-BDDB-29D4745E81FB}</ProjectGuid>
+      <LangVersion>default</LangVersion>
+  </PropertyGroup>
+
+</Project>

@@ -1,9 +1,5 @@
-name: $(Version_Major).$(Version_Minor)$(rev:.r)
-
 variables:
-  Sonar_ProjectKey: 'tiagor87_tr-requirement'
-  Version_Major: '0'
-  Version_Minor: '0'
+  - template: variables.yml
 
 stages:
   - stage: Build
@@ -19,8 +15,8 @@ stages:
             displayName: 'Prepare analysis on SonarCloud'
             inputs:
               SonarCloud: SonarCloud
-              organization: 'tiagor87-github'
-              projectKey: '$(Sonar_ProjectKey)'
+              organization: '$(SONAR_ORGANIZATION)'
+              projectKey: '$(SONAR_PROJECTKEY)'
               projectName: '$(Build.DefinitionName)'
               projectVersion: '$(Build.BuildNumber)'
               extraProperties: |
@@ -81,10 +77,10 @@ stages:
               patterns: 'drop/**/*.nupkg'
               downloadPath: '$(System.ArtifactsDirectory)'
 
-          - task: NuGetCommand@2
-            displayName: 'NuGet push'
-            inputs:
-              command: push
-              packagesToPush: '$(System.ArtifactsDirectory)/*.nupkg'
-              nuGetFeedType: external
-              publishFeedCredentials: Nuget
+#          - task: NuGetCommand@2
+#            displayName: 'NuGet push'
+#            inputs:
+#              command: push
+#              packagesToPush: '$(System.ArtifactsDirectory)/*.nupkg'
+#              nuGetFeedType: external
+#              publishFeedCredentials: Nuget
