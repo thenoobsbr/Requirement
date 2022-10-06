@@ -12,16 +12,18 @@ stages:
           demands: java
         steps:
           - task: SonarCloudPrepare@1
-            displayName: 'Prepare analysis on SonarCloud'
             inputs:
-              SonarCloud: SonarCloud
+              SonarCloud: 'SonarCloud'
               organization: '$(SONAR_ORGANIZATION)'
+              scannerMode: 'MSBuild'
               projectKey: '$(SONAR_PROJECTKEY)'
-              projectName: '$(Build.DefinitionName)'
               projectVersion: '$(Build.BuildNumber)'
               extraProperties: |
+                # Additional properties that will be passed to the scanner, 
+                # Put one key=value per line, example:
                 sonar.exclusions=**/*test*
                 sonar.exclusions=**/lib/**
+                                
           - task: DotNetCoreCLI@2
             displayName: Restore
             inputs:
