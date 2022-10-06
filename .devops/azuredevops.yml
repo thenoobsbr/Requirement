@@ -1,13 +1,14 @@
-tags:
-  include:
-  - '*'
-
-pr:
-  branches:
+trigger:
+  tags:
     include:
-    - develop
-    - master
-    - main
+    - '*'
+  
+  pr:
+    branches:
+      include:
+      - develop
+      - master
+      - main
 
 resources:
   repositories:
