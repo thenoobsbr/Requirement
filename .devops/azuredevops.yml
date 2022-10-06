@@ -3,12 +3,12 @@ trigger:
     include:
     - '*'
   
-  pr:
-    branches:
-      include:
-      - develop
-      - master
-      - main
+pr:
+  branches:
+    include:
+    - develop
+    - master
+    - main
 
 resources:
   repositories:
