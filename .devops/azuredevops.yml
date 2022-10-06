@@ -13,6 +13,7 @@ pr:
 resources:
   repositories:
   - repository: templates
+    endpoint: thenoobsbr
     type: github
     name: TheNoobsBr/Azure-Templates
     ref: refs/heads/main
