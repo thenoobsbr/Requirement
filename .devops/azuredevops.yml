@@ -15,7 +15,7 @@ resources:
   - repository: templates
     type: github
     name: TheNoobsBr/Azure-Templates
-    ref: main
+    ref: refs/heads/main
 
 variables:
 - template: variables.yml
