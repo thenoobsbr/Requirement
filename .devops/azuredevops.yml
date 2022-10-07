@@ -1,5 +1,6 @@
 parameters:
   - name: pool
+    displayName: 'Agent Pool'
     type: string
     default: 'Self-hosted'
     values:
@@ -32,11 +33,11 @@ variables:
 stages:
 - template: templates/gitflow_calculate_version.yml@templates
   parameters:
-    pool: 'Self-hosted'
+    pool: ${{ parameters.pool }}
 - template: templates/library_build.yml@templates
   parameters:
-    pool: 'Self-hosted'
+    pool: ${{ parameters.pool }}
 - template: templates/library_deploy.yml@templates
   parameters:
-    pool: 'Self-hosted'
+    pool: ${{ parameters.pool }}
   
