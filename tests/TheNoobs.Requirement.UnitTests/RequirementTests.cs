@@ -53,6 +53,13 @@ public class RequirementTests
         action.Should().Throw<RequirementFailedException>();
     }
     
+    [Fact]
+    public void GivenRequirementWhenNotNullFailAndDelegatePassedThenThrowDelegatedException()
+    {
+        Action action = () => Requirement.To().NotBeNull(null, () => new ArgumentNullException());
+        action.Should().Throw<ArgumentNullException>();
+    }
+    
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
