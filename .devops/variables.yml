@@ -1,3 +1,4 @@
 ﻿variables:
   - group: requirement
   - group: sonar
+  - group: nuget

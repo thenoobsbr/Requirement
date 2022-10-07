@@ -1,86 +1,42 @@
+parameters:
+  - name: pool
+    displayName: 'Agent Pool'
+    type: string
+    default: 'Self-hosted'
+    values:
+    - 'Azure Pipelines'
+    - 'Self-hosted'
+
+trigger:
+  tags:
+    include:
+    - '*'
+  
+pr:
+  branches:
+    include:
+    - develop
+    - master
+    - main
+
+resources:
+  repositories:
+  - repository: templates
+    endpoint: thenoobsbr
+    type: github
+    name: TheNoobsBr/Azure-Templates
+    ref: refs/heads/main
+
 variables:
-  - template: variables.yml
+- template: variables.yml
 
 stages:
-  - stage: Build
-    displayName: Build stage
-    jobs:
-      - job: Build
-        displayName: Build job
-        pool:
-          vmImage: windows-latest
-          demands: java
-        steps:
-          - task: SonarCloudPrepare@1
-            displayName: 'Prepare analysis on SonarCloud'
-            inputs:
-              SonarCloud: SonarCloud
-              organization: '$(SONAR_ORGANIZATION)'
-              projectKey: '$(SONAR_PROJECTKEY)'
-              projectName: '$(Build.DefinitionName)'
-              projectVersion: '$(Build.BuildNumber)'
-              extraProperties: |
-                sonar.exclusions=**/*test*
-                sonar.exclusions=**/lib/**
-          - task: DotNetCoreCLI@2
-            displayName: Restore
-            inputs:
-              command: restore
-              projects: '**/*.csproj'
-
-          - task: DotNetCoreCLI@2
-            displayName: Build
-            inputs:
-              projects: '**/*.csproj'
-              arguments: '--configuration Release'
-
-          - task: DotNetCoreCLI@2
-            displayName: Test
-            inputs:
-              command: test
-              projects: 'tests/**/*.csproj'
-              arguments: '--configuration Release --collect "Code Coverage"'
-
-          - task: SonarCloudAnalyze@1
-            displayName: 'Run Code Analysis'
-
-          - task: SonarCloudPublish@1
-            displayName: 'Publish Quality Gate Result'
-
-          - task: DotNetCoreCLI@2
-            displayName: Publish
-            inputs:
-              command: pack
-              packagesToPack: 'src/**/*.csproj'
-              nobuild: true
-              configurationToPack: 'Release'
-              versioningScheme: byBuildNumber
-
-          - task: PublishBuildArtifacts@1
-            displayName: 'Publish Artifact'
-            inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-              contents: '**/*.nupkg'
-              artifactName: 'drop'
-
-  - stage: Deploy
-    displayName: Deploy stage
-    jobs:
-      - job: Deploy
-        displayName: Deploy job
-        pool:
-          vmImage: windows-latest
-        steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifactName: 'drop'
-              patterns: 'drop/**/*.nupkg'
-              downloadPath: '$(System.ArtifactsDirectory)'
-
-#          - task: NuGetCommand@2
-#            displayName: 'NuGet push'
-#            inputs:
-#              command: push
-#              packagesToPush: '$(System.ArtifactsDirectory)/*.nupkg'
-#              nuGetFeedType: external
-#              publishFeedCredentials: Nuget
+- template: templates/gitflow_calculate_version.yml@templates
+  parameters:
+    pool: ${{ parameters.pool }}
+- template: templates/library_build.yml@templates
+  parameters:
+    pool: ${{ parameters.pool }}
+- template: templates/library_deploy.yml@templates
+  parameters:
+    pool: ${{ parameters.pool }}

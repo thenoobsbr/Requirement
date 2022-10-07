@@ -9,13 +9,8 @@ namespace TheNoobs.Requirement;
 
 public class Requirement : IRequirement
 {
-    private static readonly IRequirement _instance;
+    private static readonly IRequirement _instance = new Requirement();
     private readonly Func<Exception>? _createException;
-
-    static Requirement()
-    {
-        _instance = new Requirement();
-    }
 
     private Requirement(Func<Exception>? createException = null)
     {
