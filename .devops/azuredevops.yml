@@ -28,7 +28,7 @@ stages:
 - template: templates/library_build.yml@templates
   parameters:
     pool: 'Self-hosted'
-- template: templates/library_deploy
+- template: templates/library_deploy.yml@templates
   parameters:
     pool: 'Self-hosted'
   
