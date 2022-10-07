@@ -40,4 +40,3 @@ stages:
 - template: templates/library_deploy.yml@templates
   parameters:
     pool: ${{ parameters.pool }}
-  
