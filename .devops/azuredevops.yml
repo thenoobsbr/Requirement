@@ -28,6 +28,7 @@ stages:
 - template: templates/library_build.yml@templates
   parameters:
     pool: 'Self-hosted'
-    target_frameworks:
-      - netstandard2.0
-      - net6.0
+- template: templates/library_deploy
+  parameters:
+    pool: 'Self-hosted'
+  
