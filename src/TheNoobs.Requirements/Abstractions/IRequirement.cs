@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace TheNoobs.Requirement.Abstractions;
+namespace TheNoobs.Requirements.Abstractions;
 
 public interface IRequirement
 {
