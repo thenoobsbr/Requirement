@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using TheNoobs.Requirements.Abstractions;
+using TheNoobs.Requirements.Exceptions;
 
-using TheNoobs.Requirement.Abstractions;
-using TheNoobs.Requirement.Exceptions;
-
-namespace TheNoobs.Requirement;
+namespace TheNoobs.Requirements;
 
 public class Requirement : IRequirement
 {
@@ -16,14 +15,14 @@ public class Requirement : IRequirement
     {
         _createException = createException;
     }
-    
-    public static IRequirement To() => _instance; 
+
+    public static IRequirement To() => _instance;
 
     public static IRequirement To(Func<Exception> createException)
     {
         return new Requirement(createException);
     }
-    
+
     public void NotBeNull(object? obj, Func<Exception>? createException = null)
     {
         if (obj is not null)
@@ -83,7 +82,7 @@ public class Requirement : IRequirement
 
         throw CreateException(createException);
     }
-        
+
     public void NotBeEmpty(string text, Func<Exception>? createException = null)
     {
         if (!string.IsNullOrWhiteSpace(text))
@@ -226,7 +225,7 @@ public class Requirement : IRequirement
 
         throw CreateException(createException);
     }
-    
+
     private Exception CreateException(Func<Exception>? createException = null, [CallerMemberName] string? requirement = null)
     {
         return createException?.Invoke()

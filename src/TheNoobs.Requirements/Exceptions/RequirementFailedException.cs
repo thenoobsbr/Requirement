@@ -1,8 +1,7 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
-namespace TheNoobs.Requirement.Exceptions;
+namespace TheNoobs.Requirements.Exceptions;
 
 [Serializable]
 public class RequirementFailedException : Exception

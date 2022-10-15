@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F56C7A4A-9802-4612-A97A-0C2162EAFA50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheNoobs.Requirement", "src\TheNoobs.Requirement\TheNoobs.Requirement.csproj", "{ED8F9D65-A353-4617-BDDB-29D4745E81FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheNoobs.Requirements", "src\TheNoobs.Requirements\TheNoobs.Requirements.csproj", "{ED8F9D65-A353-4617-BDDB-29D4745E81FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CE55E876-F3CD-4E52-A6E2-711C9E1FC7C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheNoobs.Requirement.UnitTests", "tests\TheNoobs.Requirement.UnitTests\TheNoobs.Requirement.UnitTests.csproj", "{5971B484-DCC3-4D9F-8E53-68CA31ABF2AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheNoobs.Requirements.UnitTests", "tests\TheNoobs.Requirements.UnitTests\TheNoobs.Requirements.UnitTests.csproj", "{5971B484-DCC3-4D9F-8E53-68CA31ABF2AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
