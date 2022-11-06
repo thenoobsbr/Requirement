@@ -373,7 +373,6 @@ public class RequirementTests
     [InlineData("https://google.com?q=whatever", UriKind.Relative)]
     [InlineData("path/to/folder", UriKind.Absolute)]
     [InlineData("./path/to/folder", UriKind.Absolute)]
-    [InlineData("/path/to/folder", UriKind.Absolute)]
     [InlineData("../path/to/folder", UriKind.Absolute)]
     public void GivenRequirementWhenUrlIsInvalidThenThrow(string url, UriKind uriKind)
     {
