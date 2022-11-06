@@ -32,4 +32,7 @@ public interface IRequirement
 
     void BeLessThanOrEqualTo(DateTime value, DateTime compareValue,
         Func<Exception>? createException = null);
+
+    void BeUrl(string url, UriKind uriKind = UriKind.RelativeOrAbsolute, Func<Exception>? createException = null);
+    void BeEmail(string email, Func<Exception>? createException = null);
 }

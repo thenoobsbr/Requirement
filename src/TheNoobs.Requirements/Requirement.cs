@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Net.Mail;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using TheNoobs.Requirements.Abstractions;
@@ -224,6 +225,34 @@ public class Requirement : IRequirement
         }
 
         throw CreateException(createException);
+    }
+
+    public void BeUrl(string url, UriKind uriKind = UriKind.RelativeOrAbsolute, Func<Exception>? createException = null)
+    {
+        if (Uri.TryCreate(url, uriKind, out _))
+        {
+            return;
+        }
+
+        throw CreateException(createException);
+    }
+    
+    public void BeEmail(string email, Func<Exception>? createException = null)
+    {
+        const string PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        try
+        {
+            _ = new MailAddress(email);
+            if (Regex.IsMatch(email, PATTERN, RegexOptions.Compiled))
+            {
+                return;
+            }
+            throw CreateException(createException);
+        }
+        catch
+        {
+            throw CreateException(createException);
+        }
     }
 
     private Exception CreateException(Func<Exception>? createException = null, [CallerMemberName] string? requirement = null)

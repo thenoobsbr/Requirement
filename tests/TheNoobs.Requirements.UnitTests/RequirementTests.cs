@@ -352,6 +352,56 @@ public class RequirementTests
         var action = () => Requirement.To().BeLessThanOrEqualTo(DateTime.UtcNow.AddDays(-1), DateTime.UtcNow);
         action.Should().NotThrow();
     }
+    
+    [Theory]
+    [InlineData("https://google.com", UriKind.Absolute)]
+    [InlineData("https://google.com?q=whatever", UriKind.Absolute)]
+    [InlineData("path/to/folder", UriKind.Relative)]
+    [InlineData("./path/to/folder", UriKind.Relative)]
+    [InlineData("/path/to/folder", UriKind.Relative)]
+    [InlineData("../path/to/folder", UriKind.Relative)]
+    [InlineData("path/to/folder", UriKind.RelativeOrAbsolute)]
+    [InlineData("https://google.com/path", UriKind.RelativeOrAbsolute)]
+    public void GivenRequirementWhenUrlIsValidThenReturn(string url, UriKind uriKind)
+    {
+        var action = () => Requirement.To().BeUrl(url, uriKind);
+        action.Should().NotThrow();
+    }
+    
+    [Theory]
+    [InlineData("https://google.com", UriKind.Relative)]
+    [InlineData("https://google.com?q=whatever", UriKind.Relative)]
+    [InlineData("path/to/folder", UriKind.Absolute)]
+    [InlineData("./path/to/folder", UriKind.Absolute)]
+    [InlineData("/path/to/folder", UriKind.Absolute)]
+    [InlineData("../path/to/folder", UriKind.Absolute)]
+    public void GivenRequirementWhenUrlIsInvalidThenThrow(string url, UriKind uriKind)
+    {
+        var action = () => Requirement.To().BeUrl(url, uriKind);
+        action.Should().Throw<RequirementFailedException>();
+    }
+    
+    [Theory]
+    [InlineData("test_test@test.br")]
+    [InlineData("test.test@test.br")]
+    [InlineData("test_test@test.com.br")]
+    [InlineData("test@test.br")]
+    public void GivenRequirementWhenEmailIsValidThenReturn(string email)
+    {
+        var action = () => Requirement.To().BeEmail(email);
+        action.Should().NotThrow();
+    }
+    
+    [Theory]
+    [InlineData("test_test@test")]
+    [InlineData("test/test@test.br")]
+    [InlineData("@test.com.br")]
+    [InlineData("test@test.")]
+    public void GivenRequirementWhenEmailIsInvalidThenThrow(string email)
+    {
+        var action = () => Requirement.To().BeEmail(email);
+        action.Should().Throw<RequirementFailedException>();
+    }
 
     [Fact]
     public void GivenRequirementWhenConfigureThenShouldSetToProperty()
