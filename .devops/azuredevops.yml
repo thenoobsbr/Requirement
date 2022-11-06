@@ -31,7 +31,7 @@ variables:
 - template: variables.yml
 
 stages:
-- template: versioning/calculate_sem_version.yml@templates
+- template: templates/versioning/calculate_sem_version.yml@templates
   parameters:
     pool: ${{ parameters.pool }}
 - template: templates/csharp/library_build.yml@templates
