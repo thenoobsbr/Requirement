@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using TheNoobs.Requirements.Abstractions;
 using TheNoobs.Requirements.Exceptions;
+
+namespace TheNoobs.Requirements;
 
 public class Requirement : IRequirement
 {
@@ -11,13 +14,6 @@ public class Requirement : IRequirement
     private Requirement(Func<Exception>? createException = null)
     {
         _createException = createException;
-    }
-
-    public static IRequirement To() => _instance;
-
-    public static IRequirement To(Func<Exception> createException)
-    {
-        return new Requirement(createException);
     }
 
     public void NotBeNull(object? obj, Func<Exception>? createException = null)
@@ -137,9 +133,9 @@ public class Requirement : IRequirement
 
         throw CreateException(createException, $"Value {value} matches pattern {pattern}");
     }
-    
+
     public void BeGreaterThanOrEqualTo<T>(T value, T compareValue, Func<Exception>? createException = null)
-    where T : IComparable<T>
+        where T : IComparable<T>
     {
         if (value.CompareTo(compareValue) >= 0)
         {
@@ -150,7 +146,7 @@ public class Requirement : IRequirement
     }
 
     public void BeLessThanOrEqualTo<T>(T value, T compareValue, Func<Exception>? createException = null)
-    where T : IComparable<T>
+        where T : IComparable<T>
     {
         if (value.CompareTo(compareValue) <= 0)
         {
@@ -180,7 +176,8 @@ public class Requirement : IRequirement
         throw CreateException(createException, $"Value {email} is not a valid email address");
     }
 
-    public void BeInRange<T>(T value, T minValue, T maxValue, Func<Exception>? createException = null) where T : IComparable<T>
+    public void BeInRange<T>(T value, T minValue, T maxValue, Func<Exception>? createException = null)
+        where T : IComparable<T>
     {
         if (value.CompareTo(minValue) >= 0 && value.CompareTo(maxValue) <= 0)
         {
@@ -189,7 +186,7 @@ public class Requirement : IRequirement
 
         throw CreateException(createException, $"Value {value} is not in range {minValue} - {maxValue}");
     }
-    
+
     public void HaveMaxLength(string text, int maxLength, Func<Exception>? createException = null)
     {
         if (text == null)
@@ -203,6 +200,13 @@ public class Requirement : IRequirement
         }
 
         throw CreateException(createException, $"Text {text} is longer than {maxLength} characters");
+    }
+
+    public static IRequirement To() => _instance;
+
+    public static IRequirement To(Func<Exception> createException)
+    {
+        return new Requirement(createException);
     }
 
 
