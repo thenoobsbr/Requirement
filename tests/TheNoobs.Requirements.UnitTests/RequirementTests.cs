@@ -1,413 +1,556 @@
-﻿using FluentAssertions;
+﻿using Xunit;
+using FluentAssertions;
+using System.Collections;
 using TheNoobs.Requirements.Exceptions;
-using Xunit;
-
-namespace TheNoobs.Requirements.UnitTests;
 
 public class RequirementTests
 {
-    [Theory]
-    [InlineData("aaaaaaaaaa", "\\d+")]
-    [InlineData("0123456789", "\\D+")]
-    public void GivenRequirementWhenMatchFailThenThrow(string text, string pattern)
-    {
-        var action = () => Requirement.To().Match(text, pattern);
-        action.Should().Throw<RequirementFailedException>();
-    }
+    public static IEnumerable<object[]> NotBeNull_TestData =>
+        new List<object[]>
+        {
+            new object[] { "some string" },
+            new object[] { 42 },
+            new object[] { new object() }
+        };
 
     [Theory]
-    [InlineData("0123456789", "\\d+")]
-    [InlineData("aaaaaaaaaa", "\\D+")]
-    public void GivenRequirementWhenMatchThenReturn(string text, string pattern)
+    [MemberData(nameof(NotBeNull_TestData))]
+    public void NotBeNull_ShouldNotThrowException_WhenObjectIsNotNull(object value)
     {
-        var action = () => Requirement.To().Match(text, pattern);
-        action.Should().NotThrow();
-    }
+        // Arrange
+        var requirement = Requirement.To();
 
-    [Theory]
-    [InlineData("aaaaaaaaaa", "\\D+")]
-    [InlineData("0123456789", "\\d+")]
-    public void GivenRequirementWhenNotMatchFailThenThrow(string text, string pattern)
-    {
-        var action = () => Requirement.To().NotMatch(text, pattern);
-        action.Should().Throw<RequirementFailedException>();
-    }
+        // Act
+        Action act = () => requirement.NotBeNull(value);
 
-    [Theory]
-    [InlineData("0123456789", "\\D+")]
-    [InlineData("aaaaaaaaaa", "\\d+")]
-    public void GivenRequirementWhenNotMatchThenReturn(string text, string pattern)
-    {
-        var action = () => Requirement.To().NotMatch(text, pattern);
-        action.Should().NotThrow();
-    }
-
-    [Theory]
-    [InlineData(null)]
-    public void GivenRequirementWhenNotNullFailThenThrow(object? value)
-    {
-        var action = () => Requirement.To().NotBeNull(value);
-        action.Should().Throw<RequirementFailedException>();
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Fact]
-    public void GivenRequirementWhenNotNullFailAndDelegatePassedThenThrowDelegatedException()
+    public void NotBeNull_ShouldThrowException_WhenObjectIsNull()
     {
-        var action = () => Requirement.To().NotBeNull(null, () => new ArgumentNullException());
-        action.Should().Throw<ArgumentNullException>();
-    }
+        // Arrange
+        var requirement = Requirement.To();
 
-    [Theory]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData(0)]
-    [InlineData("s")]
-    [InlineData("a")]
-    [InlineData(5)]
-    public void GivenRequirementWhenNotNullThenReturn(object? value)
-    {
-        var action = () => Requirement.To().NotBeNull(value);
-        action.Should().NotThrow();
-    }
+        // Act
+        Action act = () => requirement.NotBeNull(null);
 
-    [Theory]
-    [InlineData("a")]
-    [InlineData("ab")]
-    [InlineData(1)]
-    [InlineData(1.5)]
-    public void GivenRequirementWhenNullFailThenThrow(object? value)
-    {
-        var action = () => Requirement.To().BeNull(value);
-        action.Should().Throw<RequirementFailedException>();
-    }
-
-    [Theory]
-    [InlineData(null)]
-    public void GivenRequirementWhenNullThenReturn(object? value)
-    {
-        var action = () => Requirement.To().BeNull(value);
-        action.Should().NotThrow();
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Fact]
-    public void GivenRequirementWhenFalseFailThenThrow()
+    public void BeNull_ShouldNotThrowException_WhenObjectIsNull()
     {
-        var action = () => Requirement.To().BeFalse(true);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeNull(null);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [Theory]
+    [MemberData(nameof(NotBeNull_TestData))]
+    public void BeNull_ShouldThrowException_WhenObjectIsNotNull(object value)
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeNull(value);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Fact]
-    public void GivenRequirementWhenFalseThenReturn()
+    public void BeTrue_ShouldNotThrowException_WhenConditionIsTrue()
     {
-        var action = () => Requirement.To().BeFalse(false);
-        action.Should().NotThrow();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeTrue(true);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Fact]
-    public void GivenRequirementWhenTrueFailThenThrow()
+    public void BeTrue_ShouldThrowException_WhenConditionIsFalse()
     {
-        var action = () => Requirement.To().BeTrue(false);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeTrue(false);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Fact]
-    public void GivenRequirementWhenTrueThenReturn()
+    public void BeFalse_ShouldNotThrowException_WhenConditionIsFalse()
     {
-        var action = () => Requirement.To().BeTrue(true);
-        action.Should().NotThrow();
-    }
+        // Arrange
+        var requirement = Requirement.To();
 
-    [Theory]
-    [InlineData("")]
-    [InlineData(" ")]
-    public void GivenRequirementWhenNotEmptyTextFailThenThrow(string value)
-    {
-        var action = () => Requirement.To().NotBeEmpty(value);
-        action.Should().Throw<RequirementFailedException>();
-    }
+        // Act
+        Action act = () => requirement.BeFalse(false);
 
-    [Theory]
-    [InlineData("a")]
-    public void GivenRequirementWhenNotEmptyTextThenReturn(string value)
-    {
-        var action = () => Requirement.To().NotBeEmpty(value);
-        action.Should().NotThrow();
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Fact]
-    public void GivenRequirementWhenNotEmptyCollectionFailThenThrow()
+    public void BeFalse_ShouldThrowException_WhenConditionIsTrue()
     {
-        var action = () => Requirement.To().NotBeEmpty(Array.Empty<int>());
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeFalse(true);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Fact]
-    public void GivenRequirementWhenNotEmptyCollectionThenReturn()
+    public void BeOfType_ShouldNotThrowException_WhenObjectIsOfType()
     {
-        var action = () => Requirement.To().NotBeEmpty(Enumerable.Range(0, 1).ToList());
-        action.Should().NotThrow();
+        // Arrange
+        var requirement = Requirement.To();
+        object value = "some string";
+
+        // Act
+        Action act = () => requirement.BeOfType<string>(value);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    public static IEnumerable<object[]> EmptyString_TestData =>
+        new List<object[]>
+        {
+            new object[] { "" }
+        };
+
+    public static IEnumerable<object[]> NonEmptyString_TestData =>
+        new List<object[]>
+        {
+            new object[] { "hello" },
+            new object[] { "world" }
+        };
+
+    public static IEnumerable<object[]> EmptyCollection_TestData =>
+        new List<object[]>
+        {
+            new object[] { new List<int>() },
+            new object[] { new int[0] }
+        };
+
+    public static IEnumerable<object[]> NonEmptyCollection_TestData =>
+        new List<object[]>
+        {
+            new object[] { new List<int> { 1, 2, 3 } },
+            new object[] { new int[] { 1, 2, 3 } }
+        };
+
+    [Theory]
+    [MemberData(nameof(EmptyString_TestData))]
+    public void BeEmpty_String_ShouldNotThrowException_WhenStringIsEmpty(string value)
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeEmpty(value);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData("a")]
-    public void GivenRequirementWhenEmptyTextFailThenThrow(string value)
+    [MemberData(nameof(NonEmptyString_TestData))]
+    public void BeEmpty_String_ShouldThrowException_WhenStringIsNotEmpty(string value)
     {
-        var action = () => Requirement.To().BeEmpty(value);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeEmpty(value);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Theory]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData(null)]
-    public void GivenRequirementWhenEmptyTextThenReturn(string value)
+    [MemberData(nameof(NonEmptyString_TestData))]
+    public void NotBeEmpty_String_ShouldNotThrowException_WhenStringIsNotEmpty(string value)
     {
-        var action = () => Requirement.To().BeEmpty(value);
-        action.Should().NotThrow();
-    }
+        // Arrange
+        var requirement = Requirement.To();
 
-    [Fact]
-    public void GivenRequirementWhenEmptyCollectionFailThenThrow()
-    {
-        var collection = Enumerable.Range(0, 1).ToList();
-        var action = () => Requirement.To().BeEmpty(collection);
-        action.Should().Throw<RequirementFailedException>();
-    }
+        // Act
+        Action act = () => requirement.NotBeEmpty(value);
 
-    [Fact]
-    public void GivenRequirementWhenEmptyCollectionThenReturn()
-    {
-        var action = () => Requirement.To().BeEmpty(Array.Empty<int>());
-        action.Should().NotThrow();
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenIntValueGreaterThanOrEqualFailThenThrow(int value, int compareValue)
+    [MemberData(nameof(EmptyString_TestData))]
+    public void NotBeEmpty_String_ShouldThrowException_WhenStringIsEmpty(string value)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.NotBeEmpty(value);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenIntValueGreaterThanOrEqualThenReturn(int value, int compareValue)
+    [MemberData(nameof(EmptyCollection_TestData))]
+    public void BeEmpty_Collection_ShouldNotThrowException_WhenCollectionIsEmpty(ICollection collection)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeEmpty(collection);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenLongValueGreaterThanOrEqualFailThenThrow(long value, long compareValue)
+    [MemberData(nameof(NonEmptyCollection_TestData))]
+    public void BeEmpty_Collection_ShouldThrowException_WhenCollectionIsNotEmpty(ICollection collection)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeEmpty(collection);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenLongValueGreaterThanOrEqualThenReturn(long value, long compareValue)
+    [MemberData(nameof(NonEmptyCollection_TestData))]
+    public void NotBeEmpty_Collection_ShouldNotThrowException_WhenCollectionIsNotEmpty(ICollection collection)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.NotBeEmpty(collection);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenDecimalValueGreaterThanOrEqualFailThenThrow(decimal value, decimal compareValue)
+    [MemberData(nameof(EmptyCollection_TestData))]
+    public void NotBeEmpty_Collection_ShouldThrowException_WhenCollectionIsEmpty(ICollection collection)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.NotBeEmpty(collection);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
+    }
+
+    public static IEnumerable<object[]> Match_TestData =>
+        new List<object[]>
+        {
+            new object[] { "abc123", @"^[a-z]+\d+$" },
+            new object[] { "42", @"^\d+$" }
+        };
+
+    public static IEnumerable<object[]> NotMatch_TestData =>
+        new List<object[]>
+        {
+            new object[] { "123abc", @"^[a-z]+\d+$" },
+            new object[] { "abc", @"^\d+$" }
+        };
+
+    [Theory]
+    [MemberData(nameof(Match_TestData))]
+    public void Match_ShouldNotThrowException_WhenValueMatchesPattern(string value, string pattern)
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.Match(value, pattern);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenDecimalValueGreaterThanOrEqualThenReturn(decimal value, decimal compareValue)
+    [MemberData(nameof(NotMatch_TestData))]
+    public void Match_ShouldThrowException_WhenValueDoesNotMatchPattern(string value, string pattern)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.Match(value, pattern);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
     [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenDoubleValueGreaterThanOrEqualFailThenThrow(double value, double compareValue)
+    [MemberData(nameof(NotMatch_TestData))]
+    public void NotMatch_ShouldNotThrowException_WhenValueDoesNotMatchPattern(string value, string pattern)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.NotMatch(value, pattern);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenDoubleValueGreaterThanOrEqualThenReturn(double value, double compareValue)
+    [MemberData(nameof(Match_TestData))]
+    public void NotMatch_ShouldThrowException_WhenValueMatchesPattern(string value, string pattern)
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.NotMatch(value, pattern);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 
-    [Fact]
-    public void GivenRequirementWhenDateValueGreaterThanOrEqualFailThenThrow()
-    {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(DateTime.UtcNow.AddDays(-1), DateTime.UtcNow);
-        action.Should().Throw<RequirementFailedException>();
-    }
+    public static IEnumerable<object[]> BeGreaterThanOrEqualTo_TestData =>
+        new List<object[]>
+        {
+            new object[] { 5, 3 },
+            new object[] { 42, 42 },
+            new object[] { 0L, -1L },
+            new object[] { 7.5m, 7.5m },
+            new object[] { 3.14, 3.0 },
+            new object[] { new DateTime(2022, 1, 1), new DateTime(2021, 1, 1) },
+        };
 
-    [Fact]
-    public void GivenRequirementWhenDateValueGreaterThanOrEqualThenReturn()
+    public static IEnumerable<object[]> NotBeGreaterThanOrEqualTo_TestData =>
+        new List<object[]>
+        {
+            new object[] { 1, 2 },
+            new object[] { -1L, 0L },
+            new object[] { 3.14m, 3.1415m },
+            new object[] { 1.5, 1.6 },
+            new object[] { new DateTime(2020, 1, 1), new DateTime(2021, 1, 1) },
+        };
+
+    [Theory]
+    [MemberData(nameof(BeGreaterThanOrEqualTo_TestData))]
+    public void BeGreaterThanOrEqualTo_ShouldNotThrowException_WhenValueIsGreaterThanOrEqualToCompareValue<T>(T value,
+        T compareValue) where T : IComparable<T>
     {
-        var action = () => Requirement.To().BeGreaterThanOrEqualTo(DateTime.UtcNow.AddDays(1), DateTime.UtcNow);
-        action.Should().NotThrow();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeGreaterThanOrEqualTo(value, compareValue);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenIntValueLessThanOrEqualFailThenThrow(int value, int compareValue)
+    [MemberData(nameof(NotBeGreaterThanOrEqualTo_TestData))]
+    public void BeGreaterThanOrEqualTo_ShouldThrowException_WhenValueIsNotGreaterThanOrEqualToCompareValue<T>(T value,
+        T compareValue) where T : IComparable<T>
     {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeGreaterThanOrEqualTo(value, compareValue);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
+    }
+
+    public static IEnumerable<object[]> BeLessThanOrEqualTo_TestData =>
+        new List<object[]>
+        {
+            new object[] { 3, 5 },
+            new object[] { 42, 42 },
+            new object[] { -1L, 0L },
+            new object[] { 7.5m, 7.5m },
+            new object[] { 3.0, 3.14 },
+            new object[] { new DateTime(2021, 1, 1), new DateTime(2022, 1, 1) },
+        };
+
+    public static IEnumerable<object[]> NotBeLessThanOrEqualTo_TestData =>
+        new List<object[]>
+        {
+            new object[] { 2, 1 },
+            new object[] { 0L, -1L },
+            new object[] { 3.1415m, 3.14m },
+            new object[] { 1.6, 1.5 },
+            new object[] { new DateTime(2021, 1, 1), new DateTime(2020, 1, 1) },
+        };
+
+    [Theory]
+    [MemberData(nameof(BeLessThanOrEqualTo_TestData))]
+    public void BeLessThanOrEqualTo_ShouldNotThrowException_WhenValueIsLessThanOrEqualToCompareValue<T>(T value,
+        T compareValue) where T : IComparable<T>
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeLessThanOrEqualTo(value, compareValue);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
     [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenIntValueLessThanOrEqualThenReturn(int value, int compareValue)
+    [MemberData(nameof(NotBeLessThanOrEqualTo_TestData))]
+    public void BeLessThanOrEqualTo_ShouldThrowException_WhenValueIsNotLessThanOrEqualToCompareValue<T>(T value,
+        T compareValue) where T : IComparable<T>
     {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
-    }
+        // Arrange
+        var requirement = Requirement.To();
 
-    [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenLongValueLessThanOrEqualFailThenThrow(long value, long compareValue)
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
-    }
+        // Act
+        Action act = () => requirement.BeLessThanOrEqualTo(value, compareValue);
 
-    [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenLongValueLessThanOrEqualFailThenReturn(long value, long compareValue)
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
-    }
-
-    [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenDecimalValueLessThanOrEqualFailThenThrow(decimal value, decimal compareValue)
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
-    }
-
-    [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenDecimalValueLessThanOrEqualThenReturn(decimal value, decimal compareValue)
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
-    }
-
-    [Theory]
-    [InlineData(1, 0)]
-    [InlineData(50, 30)]
-    public void GivenRequirementWhenDoubleValueLessThanOrEqualFailThenThrow(double value, double compareValue)
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().Throw<RequirementFailedException>();
-    }
-
-    [Theory]
-    [InlineData(0, 1)]
-    [InlineData(30, 50)]
-    public void GivenRequirementWhenDoubleValueLessThanOrEqualFailThenReturn(double value, double compareValue)
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(value, compareValue);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void GivenRequirementWhenDateValueLessThanOrEqualFailThenThrow()
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(DateTime.UtcNow.AddDays(1), DateTime.UtcNow);
-        action.Should().Throw<RequirementFailedException>();
-    }
-
-    [Fact]
-    public void GivenRequirementWhenDateValueLessThanOrEqualThenReturn()
-    {
-        var action = () => Requirement.To().BeLessThanOrEqualTo(DateTime.UtcNow.AddDays(-1), DateTime.UtcNow);
-        action.Should().NotThrow();
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
     
     [Theory]
-    [InlineData("https://google.com", UriKind.Absolute)]
-    [InlineData("https://google.com?q=whatever", UriKind.Absolute)]
-    [InlineData("path/to/folder", UriKind.Relative)]
-    [InlineData("./path/to/folder", UriKind.Relative)]
-    [InlineData("/path/to/folder", UriKind.Relative)]
-    [InlineData("../path/to/folder", UriKind.Relative)]
-    [InlineData("path/to/folder", UriKind.RelativeOrAbsolute)]
-    [InlineData("https://google.com/path", UriKind.RelativeOrAbsolute)]
-    public void GivenRequirementWhenUrlIsValidThenReturn(string url, UriKind uriKind)
+    [InlineData("https://example.com", UriKind.Absolute)]
+    [InlineData("/path/to/resource", UriKind.Relative)]
+    public void BeUrl_ShouldNotThrowException_WhenUrlIsValid(string url, UriKind uriKind)
     {
-        var action = () => Requirement.To().BeUrl(url, uriKind);
-        action.Should().NotThrow();
-    }
-    
-    [Theory]
-    [InlineData("https://google.com", UriKind.Relative)]
-    [InlineData("https://google.com?q=whatever", UriKind.Relative)]
-    [InlineData("path/to/folder", UriKind.Absolute)]
-    [InlineData("./path/to/folder", UriKind.Absolute)]
-    [InlineData("../path/to/folder", UriKind.Absolute)]
-    public void GivenRequirementWhenUrlIsInvalidThenThrow(string url, UriKind uriKind)
-    {
-        var action = () => Requirement.To().BeUrl(url, uriKind);
-        action.Should().Throw<RequirementFailedException>();
-    }
-    
-    [Theory]
-    [InlineData("test_test@test.br")]
-    [InlineData("test.test@test.br")]
-    [InlineData("test_test@test.com.br")]
-    [InlineData("test@test.br")]
-    public void GivenRequirementWhenEmailIsValidThenReturn(string email)
-    {
-        var action = () => Requirement.To().BeEmail(email);
-        action.Should().NotThrow();
-    }
-    
-    [Theory]
-    [InlineData("test_test@test")]
-    [InlineData("test/test@test.br")]
-    [InlineData("@test.com.br")]
-    [InlineData("test@test.")]
-    public void GivenRequirementWhenEmailIsInvalidThenThrow(string email)
-    {
-        var action = () => Requirement.To().BeEmail(email);
-        action.Should().Throw<RequirementFailedException>();
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeUrl(url, uriKind);
+
+        // Assert
+        act.Should().NotThrow();
     }
 
-    [Fact]
-    public void GivenRequirementWhenConfigureThenShouldSetToProperty()
+    [Theory]
+    [InlineData("invalid_url", UriKind.Absolute)]
+    [InlineData("example.com", UriKind.Absolute)]
+    public void BeUrl_ShouldThrowException_WhenUrlIsInvalid(string url, UriKind uriKind)
     {
-        var requirement = Requirement.To(() => new InvalidOperationException());
+        // Arrange
+        var requirement = Requirement.To();
 
-        var action = () => requirement.BeTrue(false);
-        action.Should().Throw<InvalidOperationException>();
+        // Act
+        Action act = () => requirement.BeUrl(url, uriKind);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
+    }
+
+    [Theory]
+    [InlineData("test@example.com")]
+    [InlineData("john.doe@example.co.uk")]
+    public void BeEmail_ShouldNotThrowException_WhenEmailIsValid(string email)
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeEmail(email);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [Theory]
+    [InlineData("test.example.com")]
+    [InlineData("john.doe@")]
+    public void BeEmail_ShouldThrowException_WhenEmailIsInvalid(string email)
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeEmail(email);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
+    }
+
+    public static IEnumerable<object[]> BeInRange_TestData =>
+        new List<object[]>
+        {
+            new object[] { 3, 1, 5 },
+            new object[] { 42, 42, 42 },
+            new object[] { -1L, -5L, 0L },
+            new object[] { 7.5m, 7.5m, 7.5m },
+            new object[] { 3.14, 3.0, 3.1415 },
+            new object[] { new DateTime(2021, 1, 1), new DateTime(2020, 1, 1), new DateTime(2022, 1, 1) },
+        };
+
+    [Theory]
+    [MemberData(nameof(BeInRange_TestData))]
+    public void BeInRange_ShouldNotThrowException_WhenValueIsInRange<T>(T value, T minValue, T maxValue) where T : IComparable<T>
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeInRange(value, minValue, maxValue);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    public static IEnumerable<object[]> NotBeInRange_TestData =>
+        new List<object[]>
+        {
+            new object[] { 0, 1, 5 },
+            new object[] { 43, 42, 42 },
+            new object[] { -6L, -5L, 0L },
+            new object[] { 7.6m, 7.5m, 7.5m },
+            new object[] { 2.9, 3.0, 3.1415 },
+            new object[] { new DateTime(2019, 1, 1), new DateTime(2020, 1, 1), new DateTime(2022, 1, 1) },
+        };
+
+    [Theory]
+    [MemberData(nameof(NotBeInRange_TestData))]
+    public void BeInRange_ShouldThrowException_WhenValueIsNotInRange<T>(T value, T minValue, T maxValue) where T : IComparable<T>
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.BeInRange(value, minValue, maxValue);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
     }
 }
