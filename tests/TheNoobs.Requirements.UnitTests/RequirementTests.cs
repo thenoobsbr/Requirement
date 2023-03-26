@@ -553,4 +553,47 @@ public class RequirementTests
         // Assert
         act.Should().Throw<RequirementFailedException>();
     }
+    
+    public static IEnumerable<object[]> HaveMaxLength_TestData => new List<object[]>
+    {
+        new object[] { "short", 5 },
+        new object[] { "exactly five", 12 },
+        new object[] { "", 0 },
+        new object[] { "Hello, World!", 20 }
+    };
+
+    [Theory]
+    [MemberData(nameof(HaveMaxLength_TestData))]
+    public void HaveMaxLength_ShouldNotThrowException_WhenTextLengthIsLessThanOrEqualToMaxLength(string text, int maxLength)
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.HaveMaxLength(text, maxLength);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    public static IEnumerable<object[]> HaveMaxLength_Invalid_TestData => new List<object[]>
+    {
+        new object[] { "too long", 5 },
+        new object[] { "exactly six", 5 },
+        new object[] { "Hello, World!", 10 }
+    };
+
+    [Theory]
+    [MemberData(nameof(HaveMaxLength_Invalid_TestData))]
+    public void HaveMaxLength_ShouldThrowException_WhenTextLengthIsGreaterThanMaxLength(string text, int maxLength)
+    {
+        // Arrange
+        var requirement = Requirement.To();
+
+        // Act
+        Action act = () => requirement.HaveMaxLength(text, maxLength);
+
+        // Assert
+        act.Should().Throw<RequirementFailedException>();
+    }
 }

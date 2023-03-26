@@ -21,4 +21,6 @@ public interface IRequirement
     void BeEmail(string email, Func<Exception>? createException = null);
     void BeInRange<T>(T value, T minValue, T maxValue, Func<Exception>? createException = null)
     where T: IComparable<T>;
+
+    void HaveMaxLength(string text, int maxLength, Func<Exception>? createException = null);
 }

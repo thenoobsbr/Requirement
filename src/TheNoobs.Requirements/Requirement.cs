@@ -189,6 +189,22 @@ public class Requirement : IRequirement
 
         throw CreateException(createException, $"Value {value} is not in range {minValue} - {maxValue}");
     }
+    
+    public void HaveMaxLength(string text, int maxLength, Func<Exception>? createException = null)
+    {
+        if (text == null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
+        if (text.Length <= maxLength)
+        {
+            return;
+        }
+
+        throw CreateException(createException, $"Text {text} is longer than {maxLength} characters");
+    }
+
 
     private Exception CreateException(Func<Exception>? createException = null,
         string? message = "Requirement \"{0}\" was not fulfilled",
